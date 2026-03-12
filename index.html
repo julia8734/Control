@@ -17,65 +17,64 @@
     <h1>Ask me.</h1>
     <p>you're not in control over this anymore</p>
     
-    <input type="text" id="questionInput" placeholder=<let's see..">
+    <input type="text" id="questionInput" placeholder=<maybe..">
     <br>
     <button onclick="decide()">beg for it</button>
 
     <div id="result"></div>
+<script>
+    function decide() {
+        // This popup will tell us if the button is even working
+        console.log("Button clicked!"); 
+        
+        const display = document.getElementById("result");
+        const inputField = document.getElementById("questionInput");
+        const input = inputField.value.toLowerCase().trim();
+        
+        // 1. Storage Logic
+        let count = parseInt(localStorage.getItem('askCount')) || 0;
+        let lastReset = localStorage.getItem('lastResetTime');
+        const now = new Date().getTime();
+        const twentyFourHours = 24 * 60 * 60 * 1000;
 
-    <script>
-        function decide() {
-            const display = document.getElementById("result");
-            const inputField = document.getElementById("questionInput");
-            const input = inputField.value.toLowerCase().trim();
-            
-            // 1. Storage Logic
-            let count = parseInt(localStorage.getItem('askCount')) || 0;
-            let lastReset = localStorage.getItem('lastResetTime');
-            const now = new Date().getTime();
-            const twentyFourHours = 24 * 60 * 60 * 1000;
-
-            // Reset count if 24 hours passed
-            if (lastReset && (now - lastReset) > twentyFourHours) {
-                count = 0;
-                localStorage.setItem('askCount', 0);
-            }
-
-            // 2. Limit Check
-            if (count >= 2) {
-                display.innerHTML = '<span style="font-size: 8vw; color: red;">Wait 24h.</span>';
-                return;
-            }
-
-            // 3. Question Check
-            const q1 = "Can I touch?";
-            const q2 = "Can I get off?";
-
-            if (input === q1 || input === q2) {
-                // Update storage
-                count++;
-                localStorage.setItem('askCount', count);
-                if (count === 1) {
-                    localStorage.setItem('lastResetTime', now);
-                }
-
-                display.innerHTML = '<span style="font-size: 10vw; color: gray;">Checking...</span>';
-                
-                setTimeout(function() {
-                    const chance = Math.random() * 100;
-                    if (chance <= 80) {
-                        display.innerHTML = '<span class="no">NO</span>';
-                        if (navigator.vibrate) { navigator.vibrate(500); }
-                    } else {
-                        display.innerHTML = '<span class="yes">YES</span>';
-                    }
-                }, 3000); 
-
-            } else {
-                display.innerHTML = '<span style="font-size: 10vw;">Ask.</span>';
-            }
+        if (lastReset && (now - lastReset) > twentyFourHours) {
+            count = 0;
+            localStorage.setItem('askCount', 0);
         }
-    </script>
+
+        if (count >= 2) {
+            display.innerHTML = '<span style="font-size: 8vw; color: red;">Wait 24h.</span>';
+            return;
+        }
+
+        // 2. LOOSER CHECK: Just looks for the word "smoke" or "drink"
+        if (input.includes("smoke") || input.includes("drink")) {
+            count++;
+            localStorage.setItem('askCount', count);
+            if (count === 1) {
+                localStorage.setItem('lastResetTime', now);
+            }
+
+            display.innerHTML = '<span style="font-size: 10vw; color: gray;">Checking...</span>';
+            
+            setTimeout(function() {
+                const chance = Math.random() * 100;
+                if (chance <= 80) {
+                    display.innerHTML = '<span class="no" style="color:white;">NO</span>';
+                    if (navigator.vibrate) { navigator.vibrate(500); }
+                } else {
+                    display.innerHTML = '<span class="yes" style="color:white;">YES</span>';
+                }
+            }, 3000); 
+
+        } else {
+            // If it doesn't recognize the words, it shows this
+            display.innerHTML = '<span style="font-size: 10vw;">Word not recognized.</span>';
+        }
+    }
+</script>
+
+    
 
 </body>
 </html>
