@@ -2,80 +2,97 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>it's not your decision</title>
+    <title>The Oracle</title>
     <style>
         body { text-align: center; font-family: sans-serif; padding: 20px; background: #0d1117; color: white; }
+        
+        /* Overall text is now bigger and easier to read */
+        h1 { font-size: 28px; }
+        p { font-size: 18px; color: #8b949e; }
+
         input { padding: 15px; width: 80%; font-size: 20px; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; margin-bottom: 20px; }
         button { padding: 15px 30px; font-size: 20px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        #result { margin-top: 25px; font-size: 50vw; font-weight: 900; display: block; min-height: 150px; text-transform: uppercase; }
-        .no { color: white; } 
-        .yes { color: white; } 
+        
+        /* The Answer: Shrunk from 25vw to 12vw so it fits better */
+        #result { 
+            margin-top: 30px; 
+            font-size: 12vw; 
+            font-weight: 900; 
+            display: block; 
+            min-height: 100px; 
+            text-transform: uppercase; 
+        }
+
+        #timer { font-size: 16px; color: #f85149; margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
 
-    <h1>Ask me.</h1>
-    <p>you're not in control over this anymore</p>
+    <h1>Ask me for it</h1>
+    <p>go ahead</p>
     
-    <input type="text" id="questionInput" placeholder=maybe..>
+    <input type="text" id="questionInput" placeholder=say it..>
     <br>
-    <button onclick="decide()">beg for it</button>
+    <button onclick="decide()">beg</button>
 
     <div id="result"></div>
-<script>
-    function decide() {
-        // This popup will tell us if the button is even working
-        console.log("Button clicked!"); 
-        
-        const display = document.getElementById("result");
-        const inputField = document.getElementById("questionInput");
-        const input = inputField.value.toLowerCase().trim();
-        
-        // 1. Storage Logic
-        let count = parseInt(localStorage.getItem('askCount')) || 0;
-        let lastReset = localStorage.getItem('lastResetTime');
-        const now = new Date().getTime();
-        const twentyFourHours = 24 * 60 * 60 * 1000;
+    <div id="timer"></div>
 
-        if (lastReset && (now - lastReset) > twentyFourHours) {
-            count = 0;
-            localStorage.setItem('askCount', 0);
-        }
+    <script>
+        function decide() {
+            const display = document.getElementById("result");
+            const timerDisplay = document.getElementById("timer");
+            const input = document.getElementById("questionInput").value.toLowerCase().trim();
+            
+            let count = parseInt(localStorage.getItem('askCount')) || 0;
+            let lastReset = localStorage.getItem('lastResetTime');
+            const now = new Date().getTime();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
 
-        if (count >= 2) {
-            display.innerHTML = '<span style="font-size: 8vw; color: red;">Wait 24h.</span>';
-            return;
-        }
-
-        // 2. LOOSER CHECK: Just looks for the word "smoke" or "drink"
-        if (input.includes("touch") || input.includes("get off")) {
-            count++;
-            localStorage.setItem('askCount', count);
-            if (count === 1) {
-                localStorage.setItem('lastResetTime', now);
+            // Reset count if 24 hours passed
+            if (lastReset && (now - lastReset) > twentyFourHours) {
+                count = 0;
+                localStorage.setItem('askCount', 0);
+                timerDisplay.innerHTML = "";
             }
 
-            display.innerHTML = '<span style="font-size: 10vw; color: gray;">Checking...</span>';
+            // Limit Check with Countdown
+            if (count >= 2) {
+                const timeLeft = twentyFourHours - (now - lastReset);
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                display.innerHTML = '<span style="font-size: 6vw; color: #f85149;">LIMIT REACHED</span>';
+                timerDisplay.innerHTML = "Come back in " + hours + "h " + minutes + "m";
+                return;
+            }
             
-            setTimeout(function() {
-                const chance = Math.random() * 100;
-                if (chance <= 80) {
-                    display.innerHTML = '<span class="no" style="color:white;">NO</span>';
-                    if (navigator.vibrate) { navigator.vibrate(500); }
-                } else {
-                    display.innerHTML = '<span class="yes" style="color:white;">YES</span>';
+
+            if (input.includes("touch") || input.includes("cum")) {
+                count++;
+                localStorage.setItem('askCount', count);
+                if (count === 1) {
+                    localStorage.setItem('lastResetTime', now);
                 }
-            }, 3000); 
 
-        } else {
-            // If it doesn't recognize the words, it shows this
-            display.innerHTML = '<span style="font-size: 10vw;">Word not recognized.</span>';
+                display.innerHTML = '<span style="font-size: 8vw; color: gray;">Checking...</span>';
+                timerDisplay.innerHTML = "";
+                
+                setTimeout(function() {
+                    const chance = Math.random() * 100;
+                    if (chance <= 80) {
+                        display.innerHTML = "NO";
+                        if (navigator.vibrate) { navigator.vibrate(500); }
+                    } else {
+                        display.innerHTML = "YES";
+                    }
+                }, 3000); 
+
+            } else {
+                display.innerHTML = '<span style="font-size: 8vw;">Ask correctly.</span>';
+            }
         }
-    }
-</script>
-
-    
+    </script>
 
 </body>
 </html>
-
