@@ -17,7 +17,7 @@
     <h1>Ask me.</h1>
     <p>you're not in control over this anymore</p>
     
-    <input type="text" id="questionInput" placeholder=<maybe..">
+    <input type="text" id="questionInput" placeholder=maybe..>
     <br>
     <button onclick="decide()">beg for it</button>
 
@@ -48,7 +48,7 @@
         }
 
         // 2. LOOSER CHECK: Just looks for the word "smoke" or "drink"
-        if (input.includes("smoke") || input.includes("drink")) {
+        if (input.includes("touch") || input.includes("get off")) {
             count++;
             localStorage.setItem('askCount', count);
             if (count === 1) {
