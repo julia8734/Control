@@ -3,25 +3,46 @@
 <head>
     <title>The 80/20 decider</title>
     <style>
-        body { text-align: center; font-family: 'Segoe UI', sans-serif; padding: 50px; background: #0d1117; color: white; }
-        input { padding: 80px; width: 80%; max-width: 400px; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; margin-bottom: 80px; }
-        button { padding: 80px 80px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-       #result { margin-top: 50px !important; 
-    font-size: 100px !important; 
-    font-weight: bold !important;
-    display: block !important;
-    min-height: 120px;
-                }
-        
+    body { text-align: center; font-family: 'Segoe UI', sans-serif; padding: 20px; background: #0d1117; color: white; }
+    
+    /* Bigger text inside the box, smaller padding so it fits the screen */
+    input { 
+        padding: 20px; 
+        width: 90%; 
+        font-size: 24px; 
+        border-radius: 8px; 
+        border: 1px solid #30363d; 
+        background: #161b22; 
+        color: white; 
+        margin-bottom: 20px; 
+    }
 
-        .no { color: #fff; } /* white for No */
-        .yes { color: #fff; } / * white for Yes */
-    </style>
+    button { 
+        padding: 20px 40px; 
+        font-size: 24px; 
+        background: #238636; 
+        color: white; 
+        border: none; 
+        border-radius: 8px; 
+        font-weight: bold; 
+    }
+
+    #result { 
+        margin-top: 50px !important; 
+        font-size: 100px !important; 
+        font-weight: bold !important;
+        display: block !important;
+    }
+
+    .no { color: white; } 
+    .yes { color: white; } 
+</style>
+
 </head>
 <body>
 
-    <h1>Ask a Question</h1>
-    <p>Try asking "Can I touch?" or "Can I cum?"</p>
+    <h1>Ask me</h1>
+    <p>Cmon"</p>
     
     <input type="text" id="questionInput" placeholder="Ask for permission.">
     <br>
@@ -29,30 +50,40 @@
 
     <div id="result"></div>
 
-    <script>
-        function decide() {
-            const input = document.getElementById("questionInput").value.toLowerCase();
-            const display = document.getElementById("result");
-            
-            // Define your two specific questions here
-            const q1 = "can I touch?";
-            const q2 = "can I cum?";
+    
+<script>
+    function decide() {
+        const input = document.getElementById("questionInput").value.toLowerCase();
+        const display = document.getElementById("result");
+        
+        const q1 = "can i smoke?";
+        const q2 = "can i drink?";
 
-            if (input.includes(q1) || input.includes(q2)) {
-                // Generate a number between 0 and 100
+        if (input.includes(q1) || input.includes(q2)) {
+            // 1. Show the "thinking" state
+            display.innerHTML = '<span style="color: gray; font-size: 40px;">Checking...</span>';
+            
+            // 2. Wait 3 seconds (3000ms)
+            setTimeout(function() {
                 const chance = Math.random() * 100;
 
                 if (chance <= 80) {
                     display.innerHTML = '<span class="no">NO</span>';
+                    // 3. Vibrate for 500 milliseconds on NO
+                    if (navigator.vibrate) {
+                        navigator.vibrate(500);
+                    }
                 } else {
                     display.innerHTML = '<span class="yes">YES</span>';
                 }
-            } else {
-                display.innerHTML = "Ask.";
-                display.style.color = "white";
-            }
+            }, 3000); 
+
+        } else {
+            display.innerHTML = "Ask.";
+            display.style.color = "white";
         }
-    </script>
+    }
+</script>
 
 </body>
 </html>
