@@ -2,60 +2,22 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Oracle</title>
+    <title>it'snot your decision</title>
     <style>
-        /* This section controls the whole page */
-        body { 
-            text-align: center; 
-            font-family: sans-serif; 
-            padding: 20px; 
-            background: #0d1117; 
-            color: white; 
-        }
-
-        /* This controls the typing box */
-        input { 
-            padding: 15px; 
-            width: 80%; 
-            font-size: 20px; 
-            border-radius: 8px; 
-            border: 1px solid #30363d; 
-            background: #161b22; 
-            color: white; 
-            margin-bottom: 20px; 
-        }
-
-        /* This controls the button */
-        button { 
-            padding: 15px 30px; 
-            font-size: 20px; 
-            background: #238636; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            font-weight: bold; 
-        }
-
-        /* THE FIX: We use 'vw' (percent of screen width) so it's always huge */
-        #result { 
-            margin-top: 50px; 
-            font-size: 50vw; /* 25% of screen width - REALLY BIG */
-            font-weight: 900; 
-            display: block;
-            min-height: 150px;
-            text-transform: uppercase;
-        }
-
-        .no { color: #ffffff; } 
-        .yes { color: #ffffff; } 
+        body { text-align: center; font-family: sans-serif; padding: 20px; background: #0d1117; color: white; }
+        input { padding: 15px; width: 80%; font-size: 20px; border-radius: 8px; border: 1px solid #30363d; background: #161b22; color: white; margin-bottom: 20px; }
+        button { padding: 15px 30px; font-size: 20px; background: #238636; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        #result { margin-top: 50px; font-size: 50vw; font-weight: 900; display: block; min-height: 150px; text-transform: uppercase; }
+        .no { color: white; } 
+        .yes { color: white; } 
     </style>
 </head>
 <body>
 
-    <h1>You ask for it</h1>
-    <p>every single fucking time, got it?</p>
+    <h1>Ask me.</h1>
+    <p>you're not in control over this anymore</p>
     
-    <input type="text" id="questionInput" placeholder="You're not in control anymore.">
+    <input type="text" id="questionInput" placeholder=<let's see..">
     <br>
     <button onclick="decide()">beg for it</button>
 
@@ -63,18 +25,44 @@
 
     <script>
         function decide() {
-            const input = document.getElementById("questionInput").value.toLowerCase();
             const display = document.getElementById("result");
+            const inputField = document.getElementById("questionInput");
+            const input = inputField.value.toLowerCase().trim();
             
-            const q1 = "can I touch?";
-            const q2 = "can I get off?";
+            // 1. Storage Logic
+            let count = parseInt(localStorage.getItem('askCount')) || 0;
+            let lastReset = localStorage.getItem('lastResetTime');
+            const now = new Date().getTime();
+            const twentyFourHours = 24 * 60 * 60 * 1000;
 
-            if (input.includes(q1) || input.includes(q2)) {
+            // Reset count if 24 hours passed
+            if (lastReset && (now - lastReset) > twentyFourHours) {
+                count = 0;
+                localStorage.setItem('askCount', 0);
+            }
+
+            // 2. Limit Check
+            if (count >= 2) {
+                display.innerHTML = '<span style="font-size: 8vw; color: red;">Wait 24h.</span>';
+                return;
+            }
+
+            // 3. Question Check
+            const q1 = "Can I touch?";
+            const q2 = "Can I get off?";
+
+            if (input === q1 || input === q2) {
+                // Update storage
+                count++;
+                localStorage.setItem('askCount', count);
+                if (count === 1) {
+                    localStorage.setItem('lastResetTime', now);
+                }
+
                 display.innerHTML = '<span style="font-size: 10vw; color: gray;">Checking...</span>';
                 
                 setTimeout(function() {
                     const chance = Math.random() * 100;
-
                     if (chance <= 80) {
                         display.innerHTML = '<span class="no">NO</span>';
                         if (navigator.vibrate) { navigator.vibrate(500); }
