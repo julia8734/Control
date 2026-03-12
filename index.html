@@ -1,89 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>The 80/20 decider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Oracle</title>
     <style>
-    body { text-align: center; font-family: 'Segoe UI', sans-serif; padding: 20px; background: #0d1117; color: white; }
-    
-    /* Bigger text inside the box, smaller padding so it fits the screen */
-    input { 
-        padding: 20px; 
-        width: 90%; 
-        font-size: 24px; 
-        border-radius: 8px; 
-        border: 1px solid #30363d; 
-        background: #161b22; 
-        color: white; 
-        margin-bottom: 20px; 
-    }
+        /* This section controls the whole page */
+        body { 
+            text-align: center; 
+            font-family: sans-serif; 
+            padding: 20px; 
+            background: #0d1117; 
+            color: white; 
+        }
 
-    button { 
-        padding: 20px 40px; 
-        font-size: 24px; 
-        background: #238636; 
-        color: white; 
-        border: none; 
-        border-radius: 8px; 
-        font-weight: bold; 
-    }
+        /* This controls the typing box */
+        input { 
+            padding: 15px; 
+            width: 80%; 
+            font-size: 20px; 
+            border-radius: 8px; 
+            border: 1px solid #30363d; 
+            background: #161b22; 
+            color: white; 
+            margin-bottom: 20px; 
+        }
 
-    #result { 
-        margin-top: 50px !important; 
-        font-size: 100px !important; 
-        font-weight: bold !important;
-        display: block !important;
-    }
+        /* This controls the button */
+        button { 
+            padding: 15px 30px; 
+            font-size: 20px; 
+            background: #238636; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-weight: bold; 
+        }
 
-    .no { color: white; } 
-    .yes { color: white; } 
-</style>
+        /* THE FIX: We use 'vw' (percent of screen width) so it's always huge */
+        #result { 
+            margin-top: 50px; 
+            font-size: 25vw; /* 25% of screen width - REALLY BIG */
+            font-weight: 900; 
+            display: block;
+            min-height: 150px;
+            text-transform: uppercase;
+        }
 
+        .no { color: #ffffff; } 
+        .yes { color: #ffffff; } 
+    </style>
 </head>
 <body>
 
-    <h1>Ask me</h1>
-    <p>Cmon"</p>
+    <h1>Ask for it</h1>
+    <p>Try:"come on.."</p>
     
-    <input type="text" id="questionInput" placeholder="Ask for permission.">
+    <input type="text" id="questionInput" placeholder="Ask for permission...">
     <br>
-    <button onclick="decide()">beg for it</button>
+    <button onclick="decide()">Ask for it</button>
 
     <div id="result"></div>
 
-    
-<script>
-    function decide() {
-        const input = document.getElementById("questionInput").value.toLowerCase();
-        const display = document.getElementById("result");
-        
-        const q1 = "can i smoke?";
-        const q2 = "can i drink?";
-
-        if (input.includes(q1) || input.includes(q2)) {
-            // 1. Show the "thinking" state
-            display.innerHTML = '<span style="color: gray; font-size: 40px;">Checking...</span>';
+    <script>
+        function decide() {
+            const input = document.getElementById("questionInput").value.toLowerCase();
+            const display = document.getElementById("result");
             
-            // 2. Wait 3 seconds (3000ms)
-            setTimeout(function() {
-                const chance = Math.random() * 100;
+            const q1 = "can I touch?";
+            const q2 = "can I get off?";
 
-                if (chance <= 80) {
-                    display.innerHTML = '<span class="no">NO</span>';
-                    // 3. Vibrate for 500 milliseconds on NO
-                    if (navigator.vibrate) {
-                        navigator.vibrate(500);
+            if (input.includes(q1) || input.includes(q2)) {
+                display.innerHTML = '<span style="font-size: 10vw; color: gray;">Checking...</span>';
+                
+                setTimeout(function() {
+                    const chance = Math.random() * 100;
+
+                    if (chance <= 80) {
+                        display.innerHTML = '<span class="no">NO</span>';
+                        if (navigator.vibrate) { navigator.vibrate(500); }
+                    } else {
+                        display.innerHTML = '<span class="yes">YES</span>';
                     }
-                } else {
-                    display.innerHTML = '<span class="yes">YES</span>';
-                }
-            }, 3000); 
+                }, 3000); 
 
-        } else {
-            display.innerHTML = "Ask.";
-            display.style.color = "white";
+            } else {
+                display.innerHTML = '<span style="font-size: 10vw;">Ask.</span>';
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>
+
